@@ -1,33 +1,48 @@
 window.addEventListener("DOMContentLoaded", () => {
-  const piece = document.getElementById("piece-1");
-  const piece2 = document.getElementById("piece-2");
-  piece.ondragstart = handleDragStart;
-  piece.ondragend = handleDragEnd;
+  const board = document.getElementById("board");
 
-  piece2.ondragstart = handleDragStart;
-  piece2.ondragend = handleDragEnd;
+  const piece = new Piece(0, 0);
+  const piece2 = new Piece(100, 0);
+
+  board.appendChild(piece.node);
+  board.appendChild(piece2.node);
+
+  // piece.draw(board);
 });
 
-function handleDragStart(e) {
-  const pieceId = e.target.id;
-  const left = Number(e.target.style.left.replace("px", ""));
-  const top = Number(e.target.style.top.replace("px", ""));
-  const mouseX = e.clientX - left;
-  const mouseY = e.clientY - top;
+class Piece {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.node = document.createElement("div");
 
-  e.dataTransfer.setData("text/plain", `${pieceId},${mouseX},${mouseY}`);
-}
+    this.node.style.width = "50px";
+    this.node.style.height = "50px";
+    this.node.style.position = "absolute";
+    this.node.style.backgroundColor = "black";
 
-function handleDragEnd(e) {
-  const dataString = e.dataTransfer.getData("text/plain");
-  const [id, mouseXString, mouseYString] = dataString.split(",");
-  const mouseX = Number(mouseXString),
-    mouseY = Number(mouseYString);
+    this.#move(this.x, this.y);
+    this.#initDrag(this.node);
+  }
 
-  const elem = document.getElementById(id);
+  #initDrag = (node) => {
+    node.onmousedown = (e) => {
+      console.log("mouse down event");
+      document.onmousemove = (e) => {
+        this.#move(e.clientX, e.clientY);
+      };
+    };
 
-  elem.style.left = `${e.clientX - mouseX}px`;
-  elem.style.top = `${e.clientY - mouseY}px`;
+    node.onmouseup = (e) => {
+      document.onmousemove = null;
+    };
+  };
 
-  console.log(id);
+  #move = (x, y) => {
+    this.x = x;
+    this.y = y;
+
+    this.node.style.top = `${y}px`;
+    this.node.style.left = `${x}px`;
+  };
 }
