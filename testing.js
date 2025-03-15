@@ -1,14 +1,17 @@
-window.addEventListener("DOMContentLoaded", () => {
-  const board = document.getElementById("board");
+// window.addEventListener("DOMContentLoaded", () => {
+//   const board = document.getElementById("board");
 
-  const piece = new Piece(0, 0);
-  const piece2 = new Piece(100, 0);
+//   const piece = new Piece(0, 0);
+//   const piece2 = new Piece(100, 0);
 
-  board.appendChild(piece.node);
-  board.appendChild(piece2.node);
+//   board.appendChild(piece.node);
+//   board.appendChild(piece2.node);
+// });
 
-  // piece.draw(board);
-});
+function addPiece() {
+  const node = new Piece(100, 0);
+  document.getElementById("board").appendChild(node.node);
+}
 
 class Piece {
   constructor(x, y) {
