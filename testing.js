@@ -20,6 +20,7 @@ class Piece {
     this.node.style.height = "50px";
     this.node.style.position = "absolute";
     this.node.style.backgroundColor = "black";
+    this.node.draggable = false;
 
     this.#move(this.x, this.y);
     this.#initDrag(this.node);
@@ -27,13 +28,16 @@ class Piece {
 
   #initDrag = (node) => {
     node.onmousedown = (e) => {
-      console.log("mouse down event");
+      const rect = e.target.getBoundingClientRect();
+      const mouseXDelta = e.clientX - rect.left;
+      const mouseYDelta = e.clientY - rect.top;
+
       document.onmousemove = (e) => {
-        this.#move(e.clientX, e.clientY);
+        this.#move(e.clientX - mouseXDelta, e.clientY - mouseYDelta);
       };
     };
 
-    node.onmouseup = (e) => {
+    node.onmouseup = () => {
       document.onmousemove = null;
     };
   };
