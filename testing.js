@@ -1,13 +1,3 @@
-// window.addEventListener("DOMContentLoaded", () => {
-//   const board = document.getElementById("board");
-
-//   const piece = new Piece(0, 0);
-//   const piece2 = new Piece(100, 0);
-
-//   board.appendChild(piece.node);
-//   board.appendChild(piece2.node);
-// });
-
 function addPiece() {
   const node = new Piece(100, 0);
   document.getElementById("board").appendChild(node.node);
