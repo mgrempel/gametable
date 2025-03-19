@@ -1,6 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
+  let isOverDrawer = false;
   //How do we represent our pieces in the board?
   const drawer = document.getElementById("drawer");
+  drawer.onmouseover = () => (isOverDrawer = true);
+  drawer.onmouseleave = () => (isOverDrawer = false);
+
   const board = document.getElementById("board");
 
   const drawerPieces = [];
@@ -14,33 +18,17 @@ document.addEventListener("DOMContentLoaded", () => {
   for (const piece of drawerPieces) {
     piece.onmousedown = (e) => {
       const boardPiece = new Piece(0, 0, piece.cloneNode(false));
+      boardPiece.addEventListener(Piece.eventTypes.onDragStop, (e) => {
+        if (isOverDrawer) {
+          boardPiece.node.remove();
+        }
+      });
+
       board.appendChild(boardPiece.node);
       boardPiece.node.onmousedown(e);
     };
     drawer.appendChild(piece);
   }
-
-  // //Add pieces to drawer.
-  // let isOverDrawer = false;
-  // const drawer = document.getElementById("drawer");
-  // drawer.onmouseenter = () => {
-  //   isOverDrawer = true;
-  // };
-  // drawer.onmouseleave = () => {
-  //   isOverDrawer = false;
-  // };
-  // const piece = new Piece(0, 0, true).node;
-  // piece.onmousedown = (e) => {
-  //   const newPiece = new Piece(0, 0, false);
-  //   newPiece.addEventListener(Piece.eventTypes.onDragStop, () => {
-  //     if (isOverDrawer) {
-  //       newPiece.node.remove();
-  //     }
-  //   });
-  //   document.getElementById("board").appendChild(newPiece.node);
-  //   newPiece.startDrag(e);
-  // };
-  // drawer.appendChild(piece);
 });
 
 function populateDrawer(pieces) {}
@@ -79,7 +67,6 @@ class Piece {
   };
 
   stopDrag = (e) => {
-    console.log("hit");
     this.#emit(Piece.eventTypes.onDragStop, e);
     this.node.style.pointerEvents = "auto";
     document.onmousemove = null;
